@@ -9,6 +9,11 @@ class Author extends Model
 {
     use HasFactory;
 
+    //nameカラムのみに対して登録・編集を可能にする
+    protected $fillable = [
+        'name'
+    ];
+
     //リレーション定義
     //「1対多」の「多」側とはリレーション関係にあることを記述
     public function books()
