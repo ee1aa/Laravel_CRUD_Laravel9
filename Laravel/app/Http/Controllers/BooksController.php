@@ -24,4 +24,10 @@ class BooksController extends Controller
         //['books'(Bladeでの変数名) => $books(Controllerでの変数名)]
         // ↪compact('books')でControllerでの変数名がそのままBladeでの変数名になる
     }
+
+    //登録画面の表示
+    public function createForm()
+    {
+        return view('books.createForm');
+    }
 }

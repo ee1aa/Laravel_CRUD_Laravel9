@@ -17,6 +17,7 @@
   </header>
 
   <div class="container">
+    <p class="text-right"><a href="/create-form" class="btn btn-success">登録する</a></p>
     <h2 class="page-header">本のリスト一覧</h2>
     <table class="table table-hover">
       <tr>

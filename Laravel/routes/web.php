@@ -29,3 +29,6 @@ Route::get('/hello', [BooksController::class, 'hello']);
 
 //本のリスト一覧
 Route::get('/index', [BooksController::class, 'index']);
+
+//本の登録画面
+Route::get('/create-form', [BooksController::class, 'createForm']);
