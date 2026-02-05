@@ -12,7 +12,7 @@ class Book extends Model
     //author_id, name, priceカラムのみに対して登録・編集を可能にする
     protected $fillable = [
         'author_id',
-        'name',
+        'title',
         'price'
     ];
 

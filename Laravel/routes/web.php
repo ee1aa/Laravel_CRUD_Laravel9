@@ -1,9 +1,10 @@
 <?php
 
-use App\Http\Controllers\AuthorsController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-//BooksControllerを使用
+
 use App\Http\Controllers\BooksController;
+use App\Http\Controllers\AuthorsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -11,8 +12,8 @@ use App\Http\Controllers\BooksController;
 |--------------------------------------------------------------------------
 |
 | Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
 |
 */
 
@@ -20,22 +21,38 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-//関数でルーティングする場合の例
-// Route::get('/hello', function() {
-//     echo 'Hello World !';
-// });
+Route::get('/dashboard', function () {
+    return redirect('/index');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
-//コントローラーのメソッドでルーティングする場合の例
-Route::get('/hello', [BooksController::class, 'hello']);
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
-//本のリスト一覧
+require __DIR__ . '/auth.php';
+
+// 本の一覧表示
 Route::get('/index', [BooksController::class, 'index']);
 
-//本の登録画面
+// createフォーム表示
 Route::get('/create-form', [BooksController::class, 'createForm']);
 
-//著者の登録処理
+// 著者create処理
 Route::post('/author/create', [AuthorsController::class, 'authorCreate']);
 
-//本（著者・タイトル・金額）の登録
+// 本create処理
 Route::post('/book/create', [BooksController::class, 'bookCreate']);
+
+// 編集（update）画面表示
+Route::get('/book/{id}/update-form',  [BooksController::class, 'updateForm']);
+
+// 編集（update）処理
+Route::post('/book/update',  [BooksController::class, 'update']);
+
+// 削除処理
+Route::get('/book/{id}/delete',  [BooksController::class, 'delete']);
+
+// 検索処理
+Route::post('/search',  [BooksController::class, 'search']);

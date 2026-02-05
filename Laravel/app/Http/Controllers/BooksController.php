@@ -10,6 +10,12 @@ use Illuminate\Http\Request;
 
 class BooksController extends Controller
 {
+    //auth認証を適用する
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function hello()
     {
         echo 'hello world!<br>';
@@ -49,5 +55,54 @@ class BooksController extends Controller
             'price' => $price
         ]);
         return redirect('/index');
+    }
+
+    //更新画面の表示
+    public function updateForm($id)
+    {
+        $book = Book::where('id', $id)->first();
+        return view('books.updateForm', ['book' => $book]);
+    }
+
+    //本の更新処理
+    public function update(Request $request)
+    {
+        //リクエストから各データを取り出す
+        $id = $request->input('id');
+        $up_title = $request->input('upTitle');
+        $up_price = $request->input('upPrice');
+
+        //idをもとにDBからレコードを探し、取り出したデータで更新
+        Book::where('id', $id)->update([
+            'title' => $up_title,
+            'price' => $up_price
+        ]);
+
+        //DBを触ってのページ遷移はredirect
+        return redirect('/index');
+    }
+
+    //本の削除処理
+    public function delete($id)
+    {
+        Book::where('id', $id)->delete();
+        return redirect('/index');
+    }
+
+    //検索処理
+    public function search(Request $request)
+    {
+        //リクエストからkeywordを取り出す
+        $keyword = $request->input('keyword');
+
+        //キーワードであいまい検索or無記入で全表示
+        if (!empty($keyword)) {
+            $books = Book::where('title', 'like', '%' . $keyword . '%')->get();
+        } else {
+            $books = Book::all();
+        }
+
+        //DBの編集はないのでview
+        return view('books.index', ['books' => $books]);
     }
 }
